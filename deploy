@@ -1,0 +1,39 @@
+#!/bin/bash
+
+apt update
+apt -y upgrade
+
+# Utilitaires
+apt -y install mc ncdu screen htop
+
+# Installation python
+if ! [ -x "$(command -v python3.9)" ]; then
+  apt -y install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev wget
+  curl -O https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tar.xz
+  tar -xf Python-3.9.1.tar.xz
+  rm Python-3.9.1.tar.xz
+  cd Python-3.9.1 || exit
+  ./configure --enable-optimizations
+  make -j 8
+  make altinstall
+  cd ..
+  rm -rf Python-3.9.1/
+fi
+
+# Retire Ancien Service
+systemctl stop unifisms.service
+systemctl disable unifisms.service
+rm /etc/systemd/system/unifisms.service
+rm /etc/systemd/system/unifisms.service # and symlinks that might be related
+rm /usr/lib/systemd/system/unifisms.service
+rm /usr/lib/systemd/system/unifisms.service # and symlinks that might be related
+systemctl daemon-reload
+systemctl reset-failed
+
+# Installation service
+cp unifisms.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable unifisms.service
+
+# Lancement
+systemctl start unifisms.service

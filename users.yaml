@@ -1,0 +1,13 @@
+- !User
+  name: NomUtilisateur
+  user: 123456789
+  passwd: a485sd789
+  planning:
+    Lundi: [ ]
+    Mardi: [ ]
+    Mercredi: [ ]
+    Jeudi: [ ]
+    Vendredi: [ ]
+    Samedi: [ ]
+    Dimanche: [ ]
+

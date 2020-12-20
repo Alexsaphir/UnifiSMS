@@ -1,0 +1,12 @@
+[Unit]
+Description=Allow SMS to be send when Unifi protect detect motion
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+WorkingDirectory=/root/UnifiSMS/
+ExecStart=/root/UnifiSMS/main.py
+
+[Install]
+WantedBy=multi-user.target
