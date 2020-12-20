@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 Restart=always
 WorkingDirectory=/root/UnifiSMS/
-ExecStart=/root/UnifiSMS/main.py
+ExecStart=/usr/local/bin/python3.9 /root/UnifiSMS/main.py
 
 [Install]
 WantedBy=multi-user.target

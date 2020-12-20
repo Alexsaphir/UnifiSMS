@@ -31,6 +31,7 @@ class Monitor:
     def __loadUsers(self, config: str):
         with open('users.yaml', 'r') as content:
             self.__users = self.__yaml.load(content)
+        logger.info(f"Nombre d'utilisateur chargés : {len(self.__users)}")
 
     def testUsers(self):
         for user in self.__users:
@@ -38,10 +39,10 @@ class Monitor:
 
     def actionMotionStart(self, info: str):
         date = info.split(sep=" - ")
-        msg = f"Mouvement détecté à {date}" \
-              f"https://protect.ui.com/"
+        msg = f"Mouvement détecté à {date[0]}" \
+              + "\nhttps://protect.ui.com/"
         for user in self.__users:
-            user.sendSMS(info)
+            user.sendSMS(msg)
 
     def actionMotionStop(self, info: str):
         pass
@@ -50,48 +51,53 @@ class Monitor:
         pass
 
     def watch(self):
-        logger.info("Start watching /srv/unifi-protect/logs/events.cameras.log")
+        try:
+            with open("/srv/unifi-protect/logs/events.cameras.log", "r") as logfile:
+                logger.info("Start watching /srv/unifi-protect/logs/events.cameras.log")
+                loglines = tail(logfile)
 
-        logfile = open("/srv/unifi-protect/logs/events.cameras.log", "r")
-        loglines = tail(logfile)
+                open_level = 0
+                event = ''
 
-        open_level = 0
-        event = ''
+                for line in loglines:
 
-        for line in loglines:
+                    line = line.lstrip()
+                    line = line.rstrip()
 
-            line = line.lstrip()
-            line = line.rstrip()
+                    if "verbose: motion.start" in line:
+                        logger.info("Mouvement Début !")
+                        self.actionMotionStart(info=line)
+                        continue
 
-            if "verbose: motion.start" in line:
-                logger.info("Mouvement Début !")
-                self.actionMotionStart(info=line)
-                continue
+                    if "verbose: motion.stop" in line:
+                        logger.info("Mouvement Fin !")
+                        self.actionMotionStop(info=line)
+                        continue
 
-            if "verbose: motion.stop" in line:
-                logger.info("Mouvement Fin !")
-                self.actionMotionStop(info=line)
-                continue
+        except ValueError as err:
+            logger.warning("Error inside the tail loop")
 
-            # if open_level == 0 and len(line) > 0 and line[0] != '{':
-            #     logger.debug(line)
-            #
-            # # Extract JSON event
-            # for character in line:
-            #     if character == '{':
-            #         open_level += 1
-            #
-            #     if open_level > 0:
-            #         event += character
-            #
-            #     if character == '}':
-            #         open_level -= 1
-            #         if open_level == 0:
-            #             logger.info(f'JSON : {event}')
-            #             self.actionJSON()
-            #             event = ''
-            #
-            #     if open_level < 0:
-            #         logger.warning(f'Too Many }} : {event}')
-            #         open_level = 0
-            #         event = ''
+# Extraction du JSON
+
+# if open_level == 0 and len(line) > 0 and line[0] != '{':
+#     logger.debug(line)
+#
+# # Extract JSON event
+# for character in line:
+#     if character == '{':
+#         open_level += 1
+#
+#     if open_level > 0:
+#         event += character
+#
+#     if character == '}':
+#         open_level -= 1
+#         if open_level == 0:
+#             logger.info(f'JSON : {event}')
+#             self.actionJSON()
+#             event = ''
+#
+#     if open_level < 0:
+#         logger.warning(f'Too Many }} : {event}')
+#         open_level = 0
+#         event = ''

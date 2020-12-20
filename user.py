@@ -14,10 +14,11 @@ def getWeekDay() -> str:
 class User:
     yaml_tag = u'!User'
 
-    def __init__(self, name: str, user: str, passwd: str, planning: dict):
+    def __init__(self, name: str, user: str, passwd: str, planning: dict, planning_switch: str):
         self.__name = name
         self.__user = user
         self.__passwd = passwd
+        self.__switch: bool = (planning_switch == 'allow')  # allow or deny
 
         self.__ClientSMS: FreeClient = FreeClient(user=self.__user, passwd=self.__passwd)
 
@@ -27,9 +28,14 @@ class User:
         day = getWeekDay()
         hour = datetime.datetime.today().hour
 
-        if hour in self.__planning[day]:
-            logger.info(f"Message Canceled : Planning")
-            return 425
+        if self.__switch:
+            if hour not in self.__planning[day]:
+                logger.info(f"Message Canceled for {self.__name} : Planning")
+                return 425
+        else:
+            if hour in self.__planning[day]:
+                logger.info(f"Message Canceled for {self.__name} : Planning")
+                return 425
 
         response: FreeResponse = self.__ClientSMS.send_sms(subject)
         logger.info(f"Sending SMS to {self.__name} : {response.status_code}")
@@ -39,10 +45,11 @@ class User:
     def to_yaml(cls, representer, data):
         return representer.represent_mapping(cls.yaml_tag,
                                              {
-                                                     'name'    : data.__name,
-                                                     'user'    : data.__user,
-                                                     'passwd'  : data.__passwd,
-                                                     'planning': data.__planning
+                                                     'name'           : data.__name,
+                                                     'user'           : data.__user,
+                                                     'passwd'         : data.__passwd,
+                                                     'planning'       : data.__planning,
+                                                     'planning_switch': data.__switch
                                                      })
 
     @classmethod
@@ -53,4 +60,3 @@ class User:
 
     def __str__(self):
         return f"User(name -> {self.__name}, user -> {self.__user}, hour_denied -> {self.__planning})"
-
