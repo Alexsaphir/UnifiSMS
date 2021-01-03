@@ -4,7 +4,7 @@ apt update
 apt -y upgrade
 
 # Utilitaires
-apt -y install mc ncdu screen htop
+apt -y install mc ncdu screen htop nano
 
 # Installation python
 if ! [ -x "$(command -v python3.9)" ]; then
@@ -19,6 +19,9 @@ if ! [ -x "$(command -v python3.9)" ]; then
   cd ..
   rm -rf Python-3.9.1/
 fi
+
+/usr/local/bin/python3.9 -m pip install --upgrade pip
+pip3.9 install -r requirements.txt
 
 # Retire Ancien Service
 systemctl stop unifisms.service

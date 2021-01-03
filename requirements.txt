@@ -1,0 +1,7 @@
+loguru
+freesms
+ruamel.yaml
+requests
+websockets
+urllib3
+aiohttp

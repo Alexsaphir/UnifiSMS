@@ -1,7 +1,7 @@
 - !User
-  name: NomUtilisateur
-  user: 123456789
-  passwd: a485sd789
+  name: Alexandre
+  user: 32297039
+  passwd: V732DPnAz4cRHc
   planning:
     Lundi: [ ]
     Mardi: [ ]
@@ -10,4 +10,46 @@
     Vendredi: [ ]
     Samedi: [ ]
     Dimanche: [ ]
+  planning_switch: allow
 
+- !User
+  name: Nathalie
+  user: 20995303
+  passwd: K8eRIykFJsxSSY
+  planning:
+    Lundi: [ ]
+    Mardi: [ ]
+    Mercredi: [ ]
+    Jeudi: [ ]
+    Vendredi: [ ]
+    Samedi: [ ]
+    Dimanche: [ ]
+  planning_switch: deny
+
+- !User
+  name: Francis
+  user: 93090833
+  passwd: uZdNVQdp8mb5v9
+  planning:
+    Lundi: [ ]
+    Mardi: [ ]
+    Mercredi: [ ]
+    Jeudi: [ ]
+    Vendredi: [ ]
+    Samedi: [ ]
+    Dimanche: [ ]
+  planning_switch: allow
+
+- !User
+  name: Fabien
+  user: 29379641
+  passwd: it3clek3Asqrph
+  planning:
+    Lundi: [ ]
+    Mardi: [ ]
+    Mercredi: [ ]
+    Jeudi: [ ]
+    Vendredi: [ ]
+    Samedi: [ ]
+    Dimanche: [ ]
+  planning_switch: allow

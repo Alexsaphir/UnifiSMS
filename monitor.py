@@ -64,12 +64,12 @@ class Monitor:
                     line = line.lstrip()
                     line = line.rstrip()
 
-                    if "verbose: motion.start" in line:
+                    if "verbose: motion.event.start" in line:
                         logger.info("Mouvement Début !")
                         self.actionMotionStart(info=line)
                         continue
 
-                    if "verbose: motion.stop" in line:
+                    if "verbose: motion.event.stop" in line:
                         logger.info("Mouvement Fin !")
                         self.actionMotionStop(info=line)
                         continue
